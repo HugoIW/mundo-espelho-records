@@ -16,6 +16,10 @@ export class UsersService {
     return await this.userModel.find().exec();
   }
 
+  async findOne(email: string): Promise<User | null> {
+    return await this.userModel.findOne({ email }).exec();
+  }
+
   async create(createUserDto: CreateUserDto): Promise<User | {}> {
     const emailExists = await this.uniqueEmailValidation(createUserDto.email);
     if (!emailExists) {

@@ -20,6 +20,11 @@ export class UsersController {
     return this.userService.findAll();
   }
 
+  @Get('/find')
+  findOne(@Body() email: string): Promise<User | null> {
+    return this.userService.findOne(email);
+  }
+
   @Post()
   create(@Body() createUserDto: CreateUserDto): Promise<User | {}> {
     return this.userService.create(createUserDto);
