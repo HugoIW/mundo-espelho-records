@@ -12,18 +12,20 @@ export class AuthService {
   ) {}
 
   async signIn(signInDto: SignInDto): Promise<any> {
-    const credentials = await this.userService.findOne(signInDto.email);
-    if (credentials) {
-      const isMatch = await isMatchHash(
-        signInDto.password,
-        credentials.password,
-      );
+    const user = await this.userService.findOne(signInDto.email);
+    if (user) {
+      const isMatch = await isMatchHash(signInDto.password, user.password);
 
       if (!isMatch) {
         throw new UnauthorizedException();
       }
 
-      const payload = { sub: credentials._id, email: credentials.email };
+      const payload = {
+        sub: user._id,
+        email: user.email,
+        roles: user.roles,
+        permissions: user.permissions,
+      };
       return {
         access_token: await this.jwtService.signAsync(payload),
       };

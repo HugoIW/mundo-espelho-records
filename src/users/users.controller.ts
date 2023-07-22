@@ -10,11 +10,14 @@ import {
 import { User } from './schemas/user.schema';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dtos';
+import { Roles } from 'src/libs/decorators/roles.decorator';
+import { Role } from 'src/libs/enums/roles.enum';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
+  @Roles(Role.Admin)
   @Get()
   findAll(): Promise<User[]> {
     return this.userService.findAll();
