@@ -12,6 +12,8 @@ import { Track } from './schemas/track.schema';
 import { FindOneTrackDto } from './dtos/find-one-track.dto';
 import { CreateTrackDto } from './dtos/create-track.dto';
 import { UpdateTrackDto } from './dtos/update-track.dto';
+import { Role } from 'src/libs/enums/roles.enum';
+import { Roles } from 'src/libs/decorators/roles.decorator';
 
 @Controller('tracks')
 export class TracksController {
@@ -27,11 +29,13 @@ export class TracksController {
     return this.trackService.findOne(findOneTrackDto);
   }
 
+  @Roles(Role.Admin)
   @Post()
   create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
     return this.trackService.create(createTrackDto);
   }
 
+  @Roles(Role.Admin)
   @Put(':id')
   update(
     @Param('id') _id: string,
@@ -40,6 +44,7 @@ export class TracksController {
     return this.trackService.update(_id, updateTrackDto);
   }
 
+  @Roles(Role.Admin)
   @Delete(':id')
   delete(@Param('id') _id: string): Promise<void> {
     return this.trackService.delete(_id);

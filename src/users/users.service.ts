@@ -13,46 +13,69 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return await this.userModel.find().exec();
+    try {
+      return await this.userModel.find().exec();
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async findOne(email: string): Promise<User | null> {
-    return await this.userModel.findOne({ email }).exec();
+    try {
+      const search = typeof email === 'object' ? Object.values(email) : email;
+      return await this.userModel
+        .findOne({ email: { $regex: '.*' + search + '.*' } })
+        .exec();
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async create(createUserDto: CreateUserDto): Promise<User | {}> {
-    const emailExists = await this.uniqueEmailValidation(createUserDto.email);
-    if (!emailExists) {
-      const createdUser = new this.userModel({
-        ...createUserDto,
-        password: await hashPassword(createUserDto.password),
-      });
-      return createdUser.save();
-    }
+    try {
+      const emailExists = await this.uniqueEmailValidation(createUserDto.email);
+      if (!emailExists) {
+        const createdUser = new this.userModel({
+          ...createUserDto,
+          password: await hashPassword(createUserDto.password),
+        });
+        return createdUser.save();
+      }
 
-    return emailExists;
+      return emailExists;
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async update(
     _id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<User | null> {
-    return await this.userModel.findOneAndUpdate(
-      { _id },
-      {
-        ...updateUserDto,
-        ...(updateUserDto.password
-          ? { password: await hashPassword(updateUserDto.password) }
-          : {}),
-      },
-      {
-        new: false,
-      },
-    );
+    try {
+      return await this.userModel.findOneAndUpdate(
+        { _id },
+        {
+          ...updateUserDto,
+          ...(updateUserDto.password
+            ? { password: await hashPassword(updateUserDto.password) }
+            : {}),
+        },
+        {
+          new: false,
+        },
+      );
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async delete(_id: string) {
-    return await this.userModel.deleteOne({ _id });
+    try {
+      return await this.userModel.deleteOne({ _id });
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   private async uniqueEmailValidation(email: string) {

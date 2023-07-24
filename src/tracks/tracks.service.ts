@@ -2,16 +2,18 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Track } from './schemas/track.schema';
 import { Model } from 'mongoose';
-import { FindOneTrackDto } from './dtos/find-one-track.dto';
-import { CreateTrackDto } from './dtos/create-track.dto';
-import { UpdateTrackDto } from './dtos/update-track.dto';
+import { CreateTrackDto, FindOneTrackDto, UpdateTrackDto } from './dtos';
 
 @Injectable()
 export class TracksService {
   constructor(@InjectModel(Track.name) private trackModel: Model<Track>) {}
 
   async findAll(): Promise<Track[]> {
-    return await this.trackModel.find().exec();
+    try {
+      return await this.trackModel.find().exec();
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async findOne(findOneTrackDto: FindOneTrackDto): Promise<Track[] | null> {
@@ -21,7 +23,9 @@ export class TracksService {
         : findOneTrackDto;
 
     try {
-      return await this.trackModel.find({ name }).exec();
+      return await this.trackModel
+        .find({ name: { $regex: '.*' + name + '.*' } })
+        .exec();
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
@@ -58,7 +62,11 @@ export class TracksService {
   }
 
   async delete(_id: string): Promise<void> {
-    await this.trackModel.findOneAndDelete({ _id });
-    return;
+    try {
+      await this.trackModel.findOneAndDelete({ _id });
+      return;
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 }

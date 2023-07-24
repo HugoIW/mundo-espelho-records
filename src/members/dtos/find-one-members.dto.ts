@@ -1,9 +1,9 @@
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class FindOneTrackDto {
+export class FindOneMemberDto {
   @IsString()
-  @IsNotEmpty({ message: 'Informe o nome da faixa!' })
+  @IsNotEmpty({ message: 'Por favor, informe o nome do membro!' })
   @Transform(({ value }) => value.toUpperCase())
   name: string;
 }

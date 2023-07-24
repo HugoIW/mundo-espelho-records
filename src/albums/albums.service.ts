@@ -2,24 +2,32 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Album } from './schemas/album.schema';
 import { Model } from 'mongoose';
-import { CreateAlbumDto } from './dtos/create-album.dto';
-import { FindOneAlbumDto } from './dtos/find-one-album.dto';
-import { UpdateAlbumDto } from './dtos/update-album.dto';
+import { CreateAlbumDto, FindOneAlbumDto, UpdateAlbumDto } from './dtos';
 
 @Injectable()
 export class AlbumsService {
   constructor(@InjectModel(Album.name) private albumModel: Model<Album>) {}
 
   async findAll(): Promise<Album[]> {
-    return await this.albumModel.find().exec();
+    try {
+      return await this.albumModel.find().exec();
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async findOne(findOneAlbumDtoDto: FindOneAlbumDto): Promise<Album[] | null> {
-    const name =
-      typeof FindOneAlbumDto === 'object'
-        ? Object.values(findOneAlbumDtoDto)
-        : findOneAlbumDtoDto;
-    return await this.albumModel.find({ name }).exec();
+    try {
+      const name =
+        typeof FindOneAlbumDto === 'object'
+          ? Object.values(findOneAlbumDtoDto)
+          : findOneAlbumDtoDto;
+      return await this.albumModel
+        .find({ name: { $regex: '.*' + name + '.*' } })
+        .exec();
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   async create(createAlbumDto: CreateAlbumDto): Promise<Album> {
@@ -57,7 +65,11 @@ export class AlbumsService {
   }
 
   async delete(_id: string): Promise<void> {
-    await this.albumModel.findOneAndDelete({ _id });
-    return;
+    try {
+      await this.albumModel.findOneAndDelete({ _id });
+      return;
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 }
