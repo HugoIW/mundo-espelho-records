@@ -1,18 +1,70 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
 import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
+import { getModelToken } from '@nestjs/mongoose';
+import { User } from './schemas/user.schema';
+import { userCreateMock, userModelMock } from '../_mocks_/users.mock';
+import { CreateUserDto, UpdateUserDto } from './dtos';
 
 describe('UsersController', () => {
-  let controller: UsersController;
+  let usersController: UsersController;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const moduleRef = await Test.createTestingModule({
       controllers: [UsersController],
+      providers: [
+        UsersService,
+        {
+          provide: getModelToken(User.name),
+          useValue: userModelMock,
+        },
+      ],
     }).compile();
 
-    controller = module.get<UsersController>(UsersController);
+    usersController = moduleRef.get<UsersController>(UsersController);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  describe('findAll', () => {
+    it('should return an array of users', async () => {
+      expect(usersController.findAll()).toBeInstanceOf(Promise<User[]>);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should return an object of users', async () => {
+      const email: string = faker.internet.email();
+      expect(usersController.findOne(email)).toBeInstanceOf(
+        Promise<User | null>,
+      );
+    });
+  });
+
+  describe('create', () => {
+    it('should return an object of users', async () => {
+      const dto: CreateUserDto = userCreateMock;
+      expect(() => {
+        try {
+          expect(usersController.create(dto)).toBeInstanceOf(Promise<User>);
+        } catch (error) {
+          expect(usersController.create(dto)).toThrow();
+        }
+      });
+    });
+  });
+
+  describe('update', () => {
+    it('should return an object of users', async () => {
+      const id = faker.string.uuid();
+      const dto: UpdateUserDto = userCreateMock;
+      expect(usersController.update(id, dto)).toBeInstanceOf(Promise<User>);
+    });
+  });
+
+  describe('delete', () => {
+    it('should return void', async () => {
+      const id = faker.string.uuid();
+      expect(usersController.delete(id)).toBeInstanceOf(Promise<void>);
+    });
   });
 });

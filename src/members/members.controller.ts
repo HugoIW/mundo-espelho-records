@@ -10,8 +10,8 @@ import {
 import { MembersService } from './members.service';
 import { Member } from './schemas/member.schema';
 import { CreateMemberDto, FindOneMemberDto, UpdateMemberDto } from './dtos';
-import { Role } from 'src/libs/enums/roles.enum';
-import { Roles } from 'src/libs/decorators/roles.decorator';
+import { Role } from '../libs/enums/roles.enum';
+import { Roles } from '../libs/decorators/roles.decorator';
 
 @Controller('members')
 export class MembersController {

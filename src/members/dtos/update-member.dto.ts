@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Album } from 'src/albums/schemas/album.schema';
+import { Album } from '../../albums/schemas/album.schema';
 import { FindOneMemberDto } from './find-one-members.dto';
 import { Transform } from 'class-transformer';
 

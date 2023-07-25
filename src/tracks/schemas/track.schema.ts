@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Album } from 'src/albums/schemas/album.schema';
+import { Album } from '../../albums/schemas/album.schema';
 
 export type TrackDocument = HydratedDocument<Track>;
 

@@ -12,8 +12,8 @@ import { Artist } from './schemas/artist.schema';
 import { CreateArtistDto } from './dtos/create-artist.dto';
 import { UpdateArtistDto } from './dtos/update-artist.dto';
 import { FindOneDto } from './dtos/find-one.dto';
-import { Roles } from 'src/libs/decorators/roles.decorator';
-import { Role } from 'src/libs/enums/roles.enum';
+import { Roles } from '../libs/decorators/roles.decorator';
+import { Role } from '../libs/enums/roles.enum';
 
 @Controller('artists')
 export class ArtistsController {

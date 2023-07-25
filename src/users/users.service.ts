@@ -1,16 +1,13 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { InjectConnection, InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { Connection, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { CreateUserDto, UpdateUserDto } from './dtos';
-import { hashPassword } from 'src/utils';
+import { hashPassword } from '../utils';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectModel(User.name) private userModel: Model<User>,
-    @InjectConnection() private connection: Connection,
-  ) {}
+  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async findAll(): Promise<User[]> {
     try {
@@ -70,9 +67,10 @@ export class UsersService {
     }
   }
 
-  async delete(_id: string) {
+  async delete(_id: string): Promise<void> {
     try {
-      return await this.userModel.deleteOne({ _id });
+      await this.userModel.findOneAndDelete({ _id });
+      return;
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }

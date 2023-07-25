@@ -12,8 +12,8 @@ import { Track } from './schemas/track.schema';
 import { FindOneTrackDto } from './dtos/find-one-track.dto';
 import { CreateTrackDto } from './dtos/create-track.dto';
 import { UpdateTrackDto } from './dtos/update-track.dto';
-import { Role } from 'src/libs/enums/roles.enum';
-import { Roles } from 'src/libs/decorators/roles.decorator';
+import { Role } from '../libs/enums/roles.enum';
+import { Roles } from '../libs/decorators/roles.decorator';
 
 @Controller('tracks')
 export class TracksController {

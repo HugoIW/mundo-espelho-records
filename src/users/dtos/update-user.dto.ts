@@ -1,18 +1,24 @@
 import { IsString, IsNotEmpty, IsEmail, IsOptional } from 'class-validator';
+import { Role } from 'src/libs/enums/roles.enum';
 
 export class UpdateUserDto {
   @IsString()
   @IsNotEmpty({ message: 'Informe o nome!' })
-  @IsOptional()
-  name?: string;
+  name: string;
 
   @IsNotEmpty({ message: 'Informe um e-mail!' })
   @IsEmail({}, { message: 'Informe um e-mail válido!' })
-  @IsOptional()
-  email?: string;
+  email: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Informe a senha!' })
+  password: string;
+
+  @IsString()
   @IsOptional()
-  password?: string;
+  roles: Role[];
+
+  @IsString()
+  @IsOptional()
+  permissions: string[];
 }

@@ -18,9 +18,11 @@ import { MembersModule } from './members/members.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(
-      process.env.ATLAS_MONGODB_CONNECTION || 'mongodb://localhost/nest',
-    ),
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: process.env.ATLAS_MONGODB_CONNECTION || 'mongodb://localhost/nest',
+      }),
+    }),
     UsersModule,
     AuthModule,
     ArtistsModule,

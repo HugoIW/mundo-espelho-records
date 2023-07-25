@@ -10,8 +10,8 @@ import {
 import { User } from './schemas/user.schema';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dtos';
-import { Roles } from 'src/libs/decorators/roles.decorator';
-import { Role } from 'src/libs/enums/roles.enum';
+import { Roles } from '../libs/decorators/roles.decorator';
+import { Role } from '../libs/enums/roles.enum';
 
 @Controller('users')
 export class UsersController {
