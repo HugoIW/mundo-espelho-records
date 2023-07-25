@@ -9,10 +9,8 @@ import {
 } from '@nestjs/common';
 import { Album } from './schemas/album.schema';
 import { AlbumsService } from './albums.service';
-import { FindOneAlbumDto } from './dtos/find-one-album.dto';
-import { CreateAlbumDto } from './dtos/create-album.dto';
-import { UpdateAlbumDto } from './dtos/update-album.dto';
-import { Roles } from '../libs/decorators/roles.decorator';
+import { FindOneAlbumDto, CreateAlbumDto, UpdateAlbumDto } from './dtos';
+import { Roles } from '../libs/decorators';
 import { Role } from '../libs/enums/roles.enum';
 
 @Controller('albums')

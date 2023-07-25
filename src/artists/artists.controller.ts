@@ -9,11 +9,9 @@ import {
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { Artist } from './schemas/artist.schema';
-import { CreateArtistDto } from './dtos/create-artist.dto';
-import { UpdateArtistDto } from './dtos/update-artist.dto';
-import { FindOneDto } from './dtos/find-one.dto';
-import { Roles } from '../libs/decorators/roles.decorator';
-import { Role } from '../libs/enums/roles.enum';
+import { CreateArtistDto, UpdateArtistDto, FindOneDto } from './dtos';
+import { Roles } from '../libs/decorators';
+import { Role } from '../libs/enums';
 
 @Controller('artists')
 export class ArtistsController {

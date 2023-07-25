@@ -9,11 +9,9 @@ import {
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { Track } from './schemas/track.schema';
-import { FindOneTrackDto } from './dtos/find-one-track.dto';
-import { CreateTrackDto } from './dtos/create-track.dto';
-import { UpdateTrackDto } from './dtos/update-track.dto';
-import { Role } from '../libs/enums/roles.enum';
-import { Roles } from '../libs/decorators/roles.decorator';
+import { FindOneTrackDto, CreateTrackDto, UpdateTrackDto } from './dtos';
+import { Role } from 'src/libs/enums';
+import { Roles } from 'src/libs/decorators';
 
 @Controller('tracks')
 export class TracksController {
