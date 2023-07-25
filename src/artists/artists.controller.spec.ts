@@ -3,9 +3,9 @@ import { ArtistsController } from './artists.controller';
 import { ArtistsService } from './artists.service';
 import { Artist } from './schemas/artist.schema';
 import { getModelToken } from '@nestjs/mongoose';
-import { artistsCreateMock, artistsModelMock } from '../_mocks_/artists.mock';
-import { CreateArtistDto, FindOneDto, UpdateArtistDto } from './dtos';
+import { CreateArtistDto, FindAllArtistsDto, UpdateArtistDto } from './dtos';
 import { faker } from '@faker-js/faker';
+import { artistsCreateMock, artistsModelMock } from '../_mocks_';
 
 describe('ArtistsController', () => {
   let controller: ArtistsController;
@@ -26,15 +26,9 @@ describe('ArtistsController', () => {
   });
 
   describe('findAll', () => {
+    const dto: FindAllArtistsDto = FindAllArtistsDto;
     it('should return all artists', async () => {
-      expect(controller.findAll()).toBeInstanceOf(Promise<Artist[]>);
-    });
-  });
-
-  describe('findOne', () => {
-    it('should return all artists', async () => {
-      const dto: FindOneDto = FindOneDto;
-      expect(controller.findOne(dto)).toBeInstanceOf(Promise<Artist | null>);
+      expect(controller.findAll(dto)).toBeInstanceOf(Promise<Artist[]>);
     });
   });
 

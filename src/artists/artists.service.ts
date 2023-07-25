@@ -2,26 +2,20 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { Artist } from './schemas/artist.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateArtistDto, FindOneDto, UpdateArtistDto } from './dtos';
+import { CreateArtistDto, FindAllArtistsDto, UpdateArtistDto } from './dtos';
 
 @Injectable()
 export class ArtistsService {
   constructor(@InjectModel(Artist.name) private artistModel: Model<Artist>) {}
 
-  async findAll(): Promise<Artist[]> {
+  async findAll(findAllArtistsDto: FindAllArtistsDto): Promise<Artist[]> {
     try {
-      return await this.artistModel.find().exec();
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  async findOne(findOneDto: FindOneDto): Promise<Artist | null> {
-    try {
-      const name =
-        typeof findOneDto === 'object' ? Object.values(findOneDto) : findOneDto;
+      const search =
+        typeof findAllArtistsDto === 'object'
+          ? Object.values(findAllArtistsDto)
+          : findAllArtistsDto;
       return await this.artistModel
-        .findOne({ name: { $regex: '.*' + name + '.*' } })
+        .find({ name: { $regex: '.*' + search + '.*' } })
         .exec();
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
@@ -29,7 +23,14 @@ export class ArtistsService {
   }
 
   async create(createArtistDto: CreateArtistDto): Promise<Artist> {
-    if (await this.findOne(createArtistDto.name)) {
+    const artists = await this.findAll(createArtistDto.name);
+    if (
+      artists &&
+      artists.length &&
+      artists.some(
+        (artist) => artist.name.toString() === createArtistDto.name.toString(),
+      )
+    ) {
       throw new HttpException('Artista já existe!', HttpStatus.BAD_REQUEST);
     }
 

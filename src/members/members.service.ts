@@ -2,26 +2,18 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Member } from './schemas/member.schema';
 import { Model } from 'mongoose';
-import { CreateMemberDto, FindOneMemberDto, UpdateMemberDto } from './dtos';
+import { CreateMemberDto, FindAllMemberDto, UpdateMemberDto } from './dtos';
 
 @Injectable()
 export class MembersService {
   constructor(@InjectModel(Member.name) private memberModel: Model<Member>) {}
 
-  async findAll(): Promise<Member[]> {
-    try {
-      return await this.memberModel.find().exec();
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  async findOne(findOneAlbumDto: FindOneMemberDto): Promise<Member[]> {
+  async findAll(findAllMemberDto: FindAllMemberDto): Promise<Member[]> {
     try {
       const name =
-        typeof findOneAlbumDto === 'object'
-          ? Object.values(findOneAlbumDto)
-          : findOneAlbumDto;
+        typeof findAllMemberDto === 'object'
+          ? Object.values(findAllMemberDto)
+          : findAllMemberDto;
       return await this.memberModel
         .find({ name: { $regex: '.*' + name + '.*' } })
         .exec();

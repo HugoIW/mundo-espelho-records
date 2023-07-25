@@ -4,8 +4,8 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
-import { userCreateMock, userModelMock } from '../_mocks_/users.mock';
 import { CreateUserDto, UpdateUserDto } from './dtos';
+import { userCreateMock, userModelMock } from '../_mocks_';
 
 describe('UsersController', () => {
   let usersController: UsersController;

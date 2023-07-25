@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Album } from './schemas/album.schema';
 import { AlbumsService } from './albums.service';
-import { FindOneAlbumDto, CreateAlbumDto, UpdateAlbumDto } from './dtos';
+import { CreateAlbumDto, FindAllAlbumsDto, UpdateAlbumDto } from './dtos';
 import { Roles } from '../libs/decorators';
 import { Role } from '../libs/enums/roles.enum';
 
@@ -18,13 +18,8 @@ export class AlbumsController {
   constructor(private albumService: AlbumsService) {}
 
   @Get()
-  findAll(): Promise<Album[]> {
-    return this.albumService.findAll();
-  }
-
-  @Get('/findby')
-  findOne(@Body() findOneAlbumDto: FindOneAlbumDto): Promise<Album[] | null> {
-    return this.albumService.findOne(findOneAlbumDto);
+  findAll(@Body() findAllAlbumsDto: FindAllAlbumsDto): Promise<Album[]> {
+    return this.albumService.findAll(findAllAlbumsDto);
   }
 
   @Roles(Role.Admin)

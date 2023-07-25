@@ -2,28 +2,20 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Album } from './schemas/album.schema';
 import { Model } from 'mongoose';
-import { CreateAlbumDto, FindOneAlbumDto, UpdateAlbumDto } from './dtos';
+import { CreateAlbumDto, FindAllAlbumsDto, UpdateAlbumDto } from './dtos';
 
 @Injectable()
 export class AlbumsService {
   constructor(@InjectModel(Album.name) private albumModel: Model<Album>) {}
 
-  async findAll(): Promise<Album[]> {
+  async findAll(findAllAlbumsDto: FindAllAlbumsDto): Promise<Album[]> {
+    const search =
+      typeof findAllAlbumsDto === 'object'
+        ? Object.values(findAllAlbumsDto)
+        : findAllAlbumsDto;
     try {
-      return await this.albumModel.find().exec();
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  async findOne(findOneAlbumDtoDto: FindOneAlbumDto): Promise<Album[] | null> {
-    try {
-      const name =
-        typeof FindOneAlbumDto === 'object'
-          ? Object.values(findOneAlbumDtoDto)
-          : findOneAlbumDtoDto;
       return await this.albumModel
-        .find({ name: { $regex: '.*' + name + '.*' } })
+        .find({ name: { $regex: '.*' + search + '.*' } })
         .exec();
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
@@ -31,7 +23,7 @@ export class AlbumsService {
   }
 
   async create(createAlbumDto: CreateAlbumDto): Promise<Album> {
-    const albums = await this.findOne(createAlbumDto.name);
+    const albums = await this.findAll(createAlbumDto.name);
     if (
       albums &&
       albums.length &&

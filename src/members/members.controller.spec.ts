@@ -3,9 +3,9 @@ import { MembersController } from './members.controller';
 import { MembersService } from './members.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Member } from './schemas/member.schema';
-import { membersCreateMock, membersModelMock } from '../_mocks_/members.mock';
-import { CreateMemberDto, FindOneMemberDto, UpdateMemberDto } from './dtos';
+import { CreateMemberDto, FindAllMemberDto, UpdateMemberDto } from './dtos';
 import { faker } from '@faker-js/faker';
+import { membersCreateMock, membersModelMock } from '../_mocks_';
 
 describe('MembersController', () => {
   let controller: MembersController;
@@ -27,14 +27,8 @@ describe('MembersController', () => {
 
   describe('findAll', () => {
     it('should return all members', async () => {
-      expect(controller.findAll()).toBeInstanceOf(Promise<Member[]>);
-    });
-  });
-
-  describe('findOne', () => {
-    it('should return all members', async () => {
-      const dto: FindOneMemberDto = FindOneMemberDto;
-      expect(controller.findOne(dto)).toBeInstanceOf(Promise<Member[]>);
+      const dto: FindAllMemberDto = FindAllMemberDto;
+      expect(controller.findAll(dto)).toBeInstanceOf(Promise<Member[]>);
     });
   });
 

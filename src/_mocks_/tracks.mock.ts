@@ -1,4 +1,4 @@
-import { FindOneTrackDto } from '../tracks/dtos';
+import { FindAllTrackDto } from '../tracks/dtos';
 import { Album } from '../albums/schemas/album.schema';
 import { faker } from '@faker-js/faker';
 
@@ -13,6 +13,6 @@ export const tracksModelMock = {
 
 export const tracksCreateMock = {
   album: new Album(),
-  name: FindOneTrackDto,
+  name: FindAllTrackDto,
   release: faker.date.anytime(),
 };

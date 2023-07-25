@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { FindOneDto } from '../artists/dtos';
+import { FindAllArtistsDto } from '../artists/dtos';
 
 export const artistsModelMock = {
   exec: jest.fn().mockReturnThis(),
@@ -11,7 +11,7 @@ export const artistsModelMock = {
 };
 
 export const artistsCreateMock = {
-  name: FindOneDto,
+  name: FindAllArtistsDto,
   genre: faker.string.sample(),
   bio: faker.string.sample(),
 };

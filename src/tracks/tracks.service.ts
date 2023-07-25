@@ -2,29 +2,20 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Track } from './schemas/track.schema';
 import { Model } from 'mongoose';
-import { CreateTrackDto, FindOneTrackDto, UpdateTrackDto } from './dtos';
+import { CreateTrackDto, FindAllTrackDto, UpdateTrackDto } from './dtos';
 
 @Injectable()
 export class TracksService {
   constructor(@InjectModel(Track.name) private trackModel: Model<Track>) {}
 
-  async findAll(): Promise<Track[]> {
+  async findAll(findAllTrackDto: FindAllTrackDto): Promise<Track[]> {
     try {
-      return await this.trackModel.find().exec();
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  async findOne(findOneTrackDto: FindOneTrackDto): Promise<Track[] | null> {
-    const name =
-      typeof findOneTrackDto === 'object'
-        ? Object.values(findOneTrackDto)
-        : findOneTrackDto;
-
-    try {
+      const search =
+        typeof findAllTrackDto === 'object'
+          ? Object.values(findAllTrackDto)
+          : findAllTrackDto;
       return await this.trackModel
-        .find({ name: { $regex: '.*' + name + '.*' } })
+        .find({ name: { $regex: '.*' + search + '.*' } })
         .exec();
     } catch (error) {
       throw new HttpException(error, HttpStatus.BAD_REQUEST);
@@ -32,7 +23,7 @@ export class TracksService {
   }
 
   async create(createTrackDto: CreateTrackDto): Promise<Track> {
-    const tracks = await this.findOne(createTrackDto.name);
+    const tracks = await this.findAll(createTrackDto.name);
     if (
       tracks &&
       tracks.length &&

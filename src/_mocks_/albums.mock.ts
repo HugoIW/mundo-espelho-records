@@ -1,4 +1,4 @@
-import { FindOneAlbumDto } from '../albums/dtos';
+import { FindAllAlbumsDto } from '../albums/dtos';
 import { Artist } from '../artists/schemas/artist.schema';
 
 export const albumsModelMock = {
@@ -12,5 +12,5 @@ export const albumsModelMock = {
 
 export const albumsCreateMock = {
   artist: new Artist,
-  name: FindOneAlbumDto,
+  name: FindAllAlbumsDto,
 };

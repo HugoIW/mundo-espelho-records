@@ -1,6 +1,6 @@
 import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { FindOneTrackDto } from './find-one-track.dto';
+import { FindAllTrackDto } from './find-all-track.dto';
 import { Album } from '../../albums/schemas/album.schema';
 
 export class CreateTrackDto {
@@ -11,7 +11,7 @@ export class CreateTrackDto {
   @IsString()
   @IsNotEmpty({ message: 'Informe o nome da faixa!' })
   @Transform(({ value }) => value.toUpperCase())
-  name: FindOneTrackDto;
+  name: FindAllTrackDto;
 
   @IsDate()
   @IsOptional()

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { Artist } from './schemas/artist.schema';
-import { CreateArtistDto, UpdateArtistDto, FindOneDto } from './dtos';
+import { CreateArtistDto, UpdateArtistDto, FindAllArtistsDto } from './dtos';
 import { Roles } from '../libs/decorators';
 import { Role } from '../libs/enums';
 
@@ -18,13 +18,8 @@ export class ArtistsController {
   constructor(private artistService: ArtistsService) {}
 
   @Get()
-  findAll(): Promise<Artist[]> {
-    return this.artistService.findAll();
-  }
-
-  @Get('/findby')
-  findOne(@Body() findOneDto: FindOneDto): Promise<Artist | null> {
-    return this.artistService.findOne(findOneDto);
+  findAll(@Body() findAllArtistsDto: FindAllArtistsDto): Promise<Artist[]> {
+    return this.artistService.findAll(findAllArtistsDto);
   }
 
   @Roles(Role.Admin)

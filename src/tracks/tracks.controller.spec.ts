@@ -3,9 +3,9 @@ import { TracksController } from './tracks.controller';
 import { TracksService } from './tracks.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Track } from './schemas/track.schema';
-import { tracksCreateMock, tracksModelMock } from '../_mocks_/tracks.mock';
-import { CreateTrackDto, FindOneTrackDto } from './dtos';
+import { CreateTrackDto, FindAllTrackDto } from './dtos';
 import { faker } from '@faker-js/faker';
+import { tracksCreateMock, tracksModelMock } from '../_mocks_';
 
 describe('TracksController', () => {
   let controller: TracksController;
@@ -27,14 +27,8 @@ describe('TracksController', () => {
 
   describe('findAll', () => {
     it('should return all tracks', () => {
-      expect(controller.findAll()).toBeInstanceOf(Promise<Track[]>);
-    });
-  });
-
-  describe('findOne', () => {
-    it('should return all tracks', () => {
-      const dto: FindOneTrackDto = FindOneTrackDto;
-      expect(controller.findOne(dto)).toBeInstanceOf(Promise<Track[] | null>);
+      const dto: FindAllTrackDto = FindAllTrackDto
+      expect(controller.findAll(dto)).toBeInstanceOf(Promise<Track[]>);
     });
   });
 

@@ -3,12 +3,9 @@ import { AlbumsController } from './albums.controller';
 import { AlbumsService } from './albums.service';
 import { getModelToken } from '@nestjs/mongoose';
 import { Album } from './schemas/album.schema';
-import {
-  albumsCreateMock,
-  albumsModelMock
-} from '../_mocks_/albums.mock';
-import { CreateAlbumDto, FindOneAlbumDto, UpdateAlbumDto } from './dtos';
+import { CreateAlbumDto, FindAllAlbumsDto, UpdateAlbumDto } from './dtos';
 import { faker } from '@faker-js/faker';
+import { albumsCreateMock, albumsModelMock } from '../_mocks_';
 
 describe('AlbumsController', () => {
   let controller: AlbumsController;
@@ -30,14 +27,8 @@ describe('AlbumsController', () => {
 
   describe('findAll', () => {
     it('should return an array of albums', async () => {
-      expect(controller.findAll()).toBeInstanceOf(Promise<Album[]>);
-    });
-  });
-
-  describe('findOne', () => {
-    it('should return an array of albums', async () => {
-      const dto: FindOneAlbumDto = FindOneAlbumDto;
-      expect(controller.findOne(dto)).toBeInstanceOf(Promise<Album | null>);
+      const dto: FindAllAlbumsDto = FindAllAlbumsDto;
+      expect(controller.findAll(dto)).toBeInstanceOf(Promise<Album[]>);
     });
   });
 

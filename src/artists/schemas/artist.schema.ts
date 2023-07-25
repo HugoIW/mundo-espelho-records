@@ -7,7 +7,7 @@ export type ArtistDocument = HydratedDocument<Artist>;
 export class Artist {
   _id: string;
 
-  @Prop({ unique: true, isnotnull: true })
+  @Prop({ unique: true })
   name: string;
 
   @Prop({ isnotnull: true })

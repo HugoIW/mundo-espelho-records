@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { Member } from './schemas/member.schema';
-import { CreateMemberDto, FindOneMemberDto, UpdateMemberDto } from './dtos';
+import { CreateMemberDto, FindAllMemberDto, UpdateMemberDto } from './dtos';
 import { Role } from '../libs/enums';
 import { Roles } from '../libs/decorators';
 
@@ -18,13 +18,8 @@ export class MembersController {
   constructor(private memberService: MembersService) {}
 
   @Get()
-  findAll(): Promise<Member[]> {
-    return this.memberService.findAll();
-  }
-
-  @Get('/findby')
-  findOne(@Body() findOneMemberDto: FindOneMemberDto): Promise<Member[]> {
-    return this.memberService.findOne(findOneMemberDto);
+  findAll(@Body() findAllMemberDto: FindAllMemberDto): Promise<Member[]> {
+    return this.memberService.findAll(findAllMemberDto);
   }
 
   @Roles(Role.Admin)
