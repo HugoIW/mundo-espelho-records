@@ -6,20 +6,21 @@ import {
   Delete,
   Param,
   Body,
+  Query
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { Member } from './schemas/member.schema';
-import { CreateMemberDto, FindAllMemberDto, UpdateMemberDto } from './dtos';
-import { Role } from '../libs/enums';
-import { Roles } from '../libs/decorators';
+import { CreateMemberDto, UpdateMemberDto } from './dtos';
+import { Role } from '../common/enums';
+import { Roles } from '../common/decorators';
 
 @Controller('members')
 export class MembersController {
   constructor(private memberService: MembersService) {}
 
   @Get()
-  findAll(@Body() findAllMemberDto: FindAllMemberDto): Promise<Member[]> {
-    return this.memberService.findAll(findAllMemberDto);
+  findAll(@Query() name: string): Promise<Member[]> {
+    return this.memberService.findAll(name);
   }
 
   @Roles(Role.Admin)
@@ -39,7 +40,7 @@ export class MembersController {
 
   @Roles(Role.Admin)
   @Delete(':id')
-  delete(@Param('id') _id: string): Promise<void> {
+  delete(@Param('id') _id: string): Promise<Member | null> {
     return this.memberService.delete(_id);
   }
 }

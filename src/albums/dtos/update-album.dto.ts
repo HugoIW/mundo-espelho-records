@@ -1,15 +1,13 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { Artist } from '../../artists/schemas/artist.schema';
-import { FindAllAlbumsDto } from './find-all-albums.dto';
 
 export class UpdateAlbumDto {
   @IsString()
   @IsNotEmpty({ message: 'Informe o artista!' })
-  artist: Artist;
+  artist: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Informe o nome do album!' })
   @Transform(({ value }) => value.toUpperCase())
-  name: FindAllAlbumsDto;
+  name: string;
 }

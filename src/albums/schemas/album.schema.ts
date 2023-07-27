@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { Artist } from '../../artists/schemas/artist.schema';
 
 export type AlbumDocument = HydratedDocument<Album>;
 
@@ -9,7 +8,7 @@ export class Album {
   _id: string;
 
   @Prop({ unique: false, type: mongoose.Schema.Types.ObjectId, ref: 'Artist' })
-  artist: Artist;
+  artist: string;
 
   @Prop({ unique: true })
   name: string;

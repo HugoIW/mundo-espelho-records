@@ -5,21 +5,22 @@ import {
   Put,
   Delete,
   Param,
+  Query,
   Body,
 } from '@nestjs/common';
 import { Album } from './schemas/album.schema';
 import { AlbumsService } from './albums.service';
-import { CreateAlbumDto, FindAllAlbumsDto, UpdateAlbumDto } from './dtos';
-import { Roles } from '../libs/decorators';
-import { Role } from '../libs/enums/roles.enum';
+import { CreateAlbumDto, UpdateAlbumDto } from './dtos';
+import { Roles } from '../common/decorators';
+import { Role } from '../common/enums/roles.enum';
 
 @Controller('albums')
 export class AlbumsController {
   constructor(private albumService: AlbumsService) {}
 
   @Get()
-  findAll(@Body() findAllAlbumsDto: FindAllAlbumsDto): Promise<Album[]> {
-    return this.albumService.findAll(findAllAlbumsDto);
+  findAll(@Query() name: string): Promise<Album[]> {
+    return this.albumService.findAll(name);
   }
 
   @Roles(Role.Admin)
@@ -39,7 +40,7 @@ export class AlbumsController {
 
   @Roles(Role.Admin)
   @Delete(':id')
-  delete(@Param('id') _id: string): Promise<void> {
+  delete(@Param('id') _id: string): Promise<Album | null> {
     return this.albumService.delete(_id);
   }
 }

@@ -6,12 +6,13 @@ import {
   Delete,
   Param,
   Body,
+  Request,
 } from '@nestjs/common';
 import { User } from './schemas/user.schema';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from './dtos';
-import { Roles } from '../libs/decorators';
-import { Role } from '../libs/enums';
+import { Roles } from '../common/decorators';
+import { Role } from '../common/enums';
 
 @Controller('users')
 export class UsersController {
@@ -25,13 +26,13 @@ export class UsersController {
 
   @Roles(Role.Admin)
   @Get('/find')
-  findOne(@Body() email: string): Promise<User | null> {
+  findOne(@Request() email: string): Promise<User | null> {
     return this.userService.findOne(email);
   }
 
   @Roles(Role.Admin)
   @Post()
-  create(@Body() createUserDto: CreateUserDto): Promise<User | {}> {
+  create(@Body() createUserDto: CreateUserDto): Promise<User | null> {
     return this.userService.create(createUserDto);
   }
 
@@ -46,7 +47,7 @@ export class UsersController {
 
   @Roles(Role.Admin)
   @Delete(':id')
-  delete(@Param('id') _id: string) {
+  delete(@Param('id') _id: string): Promise<User | null> {
     return this.userService.delete(_id);
   }
 }

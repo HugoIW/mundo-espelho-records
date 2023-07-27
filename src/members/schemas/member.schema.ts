@@ -9,7 +9,7 @@ export class Member {
   _id: string;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: '_id' })
-  album: Album;
+  album: string;
 
   @Prop()
   name: string;

@@ -6,20 +6,21 @@ import {
   Delete,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { Track } from './schemas/track.schema';
-import { FindAllTrackDto, CreateTrackDto, UpdateTrackDto } from './dtos';
-import { Role } from '../libs/enums';
-import { Roles } from '../libs/decorators';
+import { CreateTrackDto, UpdateTrackDto } from './dtos';
+import { Role } from '../common/enums';
+import { Roles } from '../common/decorators';
 
 @Controller('tracks')
 export class TracksController {
   constructor(private trackService: TracksService) {}
 
   @Get()
-  findAll(@Body() findAllTrackDto: FindAllTrackDto): Promise<Track[]> {
-    return this.trackService.findAll(findAllTrackDto);
+  findAll(@Query() name: string): Promise<Track[]> {
+    return this.trackService.findAll(name);
   }
 
   @Roles(Role.Admin)
@@ -39,7 +40,7 @@ export class TracksController {
 
   @Roles(Role.Admin)
   @Delete(':id')
-  delete(@Param('id') _id: string): Promise<void> {
+  delete(@Param('id') _id: string): Promise<Track | null> {
     return this.trackService.delete(_id);
   }
 }

@@ -13,7 +13,7 @@ export class Track {
     type: mongoose.Schema.Types.ObjectId,
     ref: '_id',
   })
-  album: Album;
+  album: string;
 
   @Prop()
   name: string;

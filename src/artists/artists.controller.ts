@@ -6,20 +6,21 @@ import {
   Delete,
   Param,
   Body,
+  Query,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { Artist } from './schemas/artist.schema';
-import { CreateArtistDto, UpdateArtistDto, FindAllArtistsDto } from './dtos';
-import { Roles } from '../libs/decorators';
-import { Role } from '../libs/enums';
+import { CreateArtistDto, UpdateArtistDto } from './dtos';
+import { Roles } from '../common/decorators';
+import { Role } from '../common/enums';
 
 @Controller('artists')
 export class ArtistsController {
   constructor(private artistService: ArtistsService) {}
 
   @Get()
-  findAll(@Body() findAllArtistsDto: FindAllArtistsDto): Promise<Artist[]> {
-    return this.artistService.findAll(findAllArtistsDto);
+  findAll(@Query() name: string): Promise<Artist[]> {
+    return this.artistService.findAll(name);
   }
 
   @Roles(Role.Admin)
@@ -41,7 +42,7 @@ export class ArtistsController {
 
   @Roles(Role.Admin)
   @Delete(':id')
-  delete(@Param('id') _id: string): Promise<void> {
+  delete(@Param('id') _id: string): Promise<Artist | null> {
     return this.artistService.delete(_id);
   }
 }

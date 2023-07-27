@@ -10,80 +10,49 @@ export class UsersService {
   constructor(@InjectModel(User.name) private userModel: Model<User>) {}
 
   async findAll(): Promise<User[]> {
-    try {
-      return await this.userModel.find().exec();
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-    }
+    return await this.userModel.find();
   }
 
   async findOne(email: string): Promise<User | null> {
-    try {
-      const search = typeof email === 'object' ? Object.values(email) : email;
-      return await this.userModel
-        .findOne({ email: { $regex: '.*' + search + '.*' } })
-        .exec();
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-    }
+    return await this.userModel.findOne({
+      email: { $regex: '.*' + email + '.*', $options: 'i' },
+    });
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User | {}> {
-    try {
-      const emailExists = await this.uniqueEmailValidation(createUserDto.email);
-      if (!emailExists) {
-        const createdUser = new this.userModel({
-          ...createUserDto,
-          password: await hashPassword(createUserDto.password),
-        });
-        return createdUser.save();
-      }
+  async create(createUserDto: CreateUserDto): Promise<User | null> {
+    const userExists = await this.userModel.find({
+      email: { $exists: true, $in: [createUserDto.email] },
+    });
 
-      return emailExists;
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    if (!userExists.length) {
+      return await this.userModel.create(createUserDto);
     }
+
+    throw new HttpException(
+      'E-mail already exists!',
+      HttpStatus.BAD_REQUEST,
+    );
   }
 
   async update(
     _id: string,
     updateUserDto: UpdateUserDto,
   ): Promise<User | null> {
-    try {
-      return await this.userModel.findOneAndUpdate(
-        { _id },
-        {
-          ...updateUserDto,
-          ...(updateUserDto.password
-            ? { password: await hashPassword(updateUserDto.password) }
-            : {}),
-        },
-        {
-          new: false,
-        },
-      );
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-    }
+    return await this.userModel.findOneAndUpdate(
+      { _id },
+      {
+        ...updateUserDto,
+        ...(updateUserDto.password
+          ? { password: await hashPassword(updateUserDto.password) }
+          : {}),
+      },
+      {
+        new: false,
+      },
+    );
   }
 
-  async delete(_id: string): Promise<void> {
-    try {
-      await this.userModel.findOneAndDelete({ _id });
-      return;
-    } catch (error) {
-      throw new HttpException(error, HttpStatus.BAD_REQUEST);
-    }
-  }
-
-  private async uniqueEmailValidation(email: string) {
-    const emailExists = await this.userModel.findOne({ email }).exec();
-    if (emailExists) {
-      throw new HttpException(
-        'Esse e-mail já existe em nosso sistema!',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    return 0;
+  async delete(_id: string): Promise<User | null> {
+    return await this.userModel.findOneAndDelete({ _id });
   }
 }

@@ -1,18 +1,22 @@
-import { FindAllTrackDto } from '../tracks/dtos';
-import { Album } from '../albums/schemas/album.schema';
+import { Track } from '../tracks/schemas/track.schema';
 import { faker } from '@faker-js/faker';
 
-export const tracksModelMock = {
-  exec: jest.fn().mockReturnThis(),
-  find: jest.fn().mockReturnThis(),
-  findOne: jest.fn().mockReturnThis(),
-  findOneAndUpdate: jest.fn().mockReturnThis(),
-  findOneAndDelete: jest.fn().mockReturnThis(),
-  save: jest.fn().mockReturnThis(),
+export const tracksCrudMock = {
+  create: jest.fn(),
+  find: jest.fn(),
+  findOneAndUpdate: jest.fn(),
+  findOneAndDelete: jest.fn(),
 };
 
-export const tracksCreateMock = {
-  album: new Album(),
-  name: FindAllTrackDto,
-  release: faker.date.anytime(),
+export const tracksModelMock = (): Track => {
+  const track = new Track();
+
+  track._id = faker.string.uuid();
+  track.album = faker.string.uuid();
+  track.name = faker.string.sample();
+  track.release = faker.date.anytime();
+  track.created_at = faker.date.anytime();
+  track.updated_at = faker.date.anytime();
+
+  return track;
 };

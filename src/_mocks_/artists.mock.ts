@@ -1,17 +1,22 @@
 import { faker } from '@faker-js/faker';
-import { FindAllArtistsDto } from '../artists/dtos';
+import { Artist } from '../artists/schemas/artist.schema';
 
-export const artistsModelMock = {
-  exec: jest.fn().mockReturnThis(),
-  find: jest.fn().mockReturnThis(),
-  findOne: jest.fn().mockReturnThis(),
-  findOneAndUpdate: jest.fn().mockReturnThis(),
-  findOneAndDelete: jest.fn().mockReturnThis(),
-  save: jest.fn().mockReturnThis(),
+export const artistsCrudMock = {
+  find: jest.fn(),
+  create: jest.fn(),
+  findOneAndUpdate: jest.fn(),
+  findOneAndDelete: jest.fn(),
 };
 
-export const artistsCreateMock = {
-  name: FindAllArtistsDto,
-  genre: faker.string.sample(),
-  bio: faker.string.sample(),
+export const artistsModelMock = (): Artist => {
+  const artist = new Artist();
+
+  artist._id = faker.string.uuid();
+  artist.name = faker.string.sample();
+  artist.genre = faker.string.sample();
+  artist.bio = faker.string.sample();
+  artist.created_at = faker.date.anytime();
+  artist.updated_at = faker.date.anytime();
+
+  return artist;
 };
