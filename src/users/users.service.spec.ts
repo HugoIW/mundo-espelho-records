@@ -5,7 +5,7 @@ import { usersCrudMock, usersModelMock } from '../_mocks_';
 import { getModelToken } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { faker } from '@faker-js/faker';
-import { CreateUserDto } from './dtos';
+import { CreateUserDto, UpdateUserDto } from './dtos';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -73,7 +73,7 @@ describe('UsersService', () => {
 
   describe('update', () => {
     const id = faker.string.uuid();
-    const dto: CreateUserDto = {
+    const dto: UpdateUserDto = {
       name: faker.string.sample(),
       email: faker.internet.email(),
       password: faker.string.sample(12),

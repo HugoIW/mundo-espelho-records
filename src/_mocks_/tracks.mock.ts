@@ -2,7 +2,10 @@ import { Track } from '../tracks/schemas/track.schema';
 import { faker } from '@faker-js/faker';
 
 export const tracksCrudMock = {
+  findAll: jest.fn(),
   create: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
   find: jest.fn(),
   findOneAndUpdate: jest.fn(),
   findOneAndDelete: jest.fn(),

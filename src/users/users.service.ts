@@ -20,18 +20,19 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User | null> {
+    console.log(createUserDto);
     const userExists = await this.userModel.find({
       email: { $exists: true, $in: [createUserDto.email] },
     });
 
     if (!userExists.length) {
-      return await this.userModel.create(createUserDto);
+      return await this.userModel.create({
+        ...createUserDto,
+        password: await hashPassword(createUserDto.password),
+      });
     }
 
-    throw new HttpException(
-      'E-mail already exists!',
-      HttpStatus.BAD_REQUEST,
-    );
+    throw new HttpException('E-mail already exists!', HttpStatus.BAD_REQUEST);
   }
 
   async update(

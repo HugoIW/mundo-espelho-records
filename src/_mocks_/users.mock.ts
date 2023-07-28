@@ -1,13 +1,17 @@
 import { faker } from '@faker-js/faker';
 import { User } from '../users/schemas/user.schema';
 import { hashPassword } from '../utils';
+import { Role } from '../common/enums';
 
 export const usersCrudMock = {
-  create: jest.fn().mockReturnThis(),
-  find: jest.fn().mockReturnThis(),
-  findOne: jest.fn().mockReturnThis(),
-  findOneAndUpdate: jest.fn().mockReturnThis(),
-  findOneAndDelete: jest.fn().mockReturnThis(),
+  create: jest.fn(),
+  findAll: jest.fn(),
+  find: jest.fn(),
+  findOne: jest.fn(),
+  findOneAndUpdate: jest.fn(),
+  findOneAndDelete: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
 };
 
 export const usersModelMock = async (): Promise<User> => {
@@ -16,7 +20,7 @@ export const usersModelMock = async (): Promise<User> => {
   user.name = faker.person.firstName();
   user.email = faker.internet.email();
   user.password = await hashPassword('12345678');
-  user.roles = [];
+  user.roles = [Role.Admin];
   user.permissions = ['admin'];
 
   return user;

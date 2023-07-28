@@ -11,14 +11,12 @@ export class UpdateUserDto {
   email: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Informe a senha!' })
+  @IsOptional()
   password: string;
 
-  @IsString()
   @IsOptional()
   roles: Role[];
 
-  @IsString()
   @IsOptional()
   permissions: string[];
 }

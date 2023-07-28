@@ -2,7 +2,10 @@ import { faker } from '@faker-js/faker';
 import { Member } from '../members/schemas/member.schema';
 
 export const membersCrudMock = {
+  findAll: jest.fn(),
   create: jest.fn(),
+  update: jest.fn(),
+  delete: jest.fn(),
   find: jest.fn(),
   findOneAndUpdate: jest.fn(),
   findOneAndDelete: jest.fn(),

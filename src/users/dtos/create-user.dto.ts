@@ -14,11 +14,9 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Informe a senha!' })
   password: string;
 
-  @IsString()
   @IsOptional()
   roles: Role[];
 
-  @IsString()
   @IsOptional()
   permissions: string[];
 }
