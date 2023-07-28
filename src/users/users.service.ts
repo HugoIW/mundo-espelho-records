@@ -20,7 +20,6 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<User | null> {
-    console.log(createUserDto);
     const userExists = await this.userModel.find({
       email: { $exists: true, $in: [createUserDto.email] },
     });
