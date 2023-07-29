@@ -1,3 +1,4 @@
 export const authSignInMock = {
-  signAsync: jest.fn()
+  signIn: jest.fn(),
+  signAsync: jest.fn(),
 };

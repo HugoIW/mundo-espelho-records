@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { tracksCrudMock, tracksModelMock } from '../src/_mocks_';
+import { tokenMock, tracksCrudMock, tracksModelMock } from '../src/_mocks_';
 import { faker } from '@faker-js/faker';
 import { TracksModule } from '../src/tracks/tracks.module';
 import { TracksService } from '../src/tracks/tracks.service';
@@ -10,6 +10,7 @@ import { CreateTrackDto, UpdateTrackDto } from '../src/tracks/dtos';
 
 describe('USersController (e2e)', () => {
   let app: INestApplication;
+  let token: string | undefined;
   const track = tracksModelMock();
 
   beforeEach(async () => {
@@ -20,12 +21,15 @@ describe('USersController (e2e)', () => {
       .useValue(tracksCrudMock)
       .compile();
 
+    token = await tokenMock();
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
   it('/tracks (GET)', async () => {
-    const response = request(app.getHttpServer()).get('/tracks');
+    const response = request(app.getHttpServer())
+      .get('/tracks')
+      .set({ Authorization: 'Bearer ' + token });
 
     tracksCrudMock.findAll.mockImplementation(() => [track, track, track]);
     expect((await response).statusCode).toEqual(200);
@@ -41,6 +45,7 @@ describe('USersController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .post('/tracks')
+      .set({ Authorization: 'Bearer ' + token })
       .send(dto);
 
     tracksCrudMock.create.mockImplementation(() => track);
@@ -58,6 +63,7 @@ describe('USersController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .put('/tracks/' + id)
+      .set({ Authorization: 'Bearer ' + token })
       .send(dto);
 
     tracksCrudMock.update.mockImplementation(() => track);
@@ -67,7 +73,9 @@ describe('USersController (e2e)', () => {
 
   it('/tracks/id (DELETE)', async () => {
     const id = faker.string.uuid();
-    const response = request(app.getHttpServer()).delete('/tracks/' + id);
+    const response = request(app.getHttpServer())
+      .delete('/tracks/' + id)
+      .set({ Authorization: 'Bearer ' + token });
 
     tracksCrudMock.delete.mockImplementation(() => track);
     expect((await response).statusCode).toEqual(200);

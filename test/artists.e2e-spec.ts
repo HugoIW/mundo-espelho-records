@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { artistsCrudMock, artistsModelMock } from '../src/_mocks_';
+import { artistsCrudMock, artistsModelMock, tokenMock } from '../src/_mocks_';
 import { faker } from '@faker-js/faker';
 import { ArtistsModule } from '../src/artists/artists.module';
 import { ArtistsService } from '../src/artists/artists.service';
@@ -10,6 +10,7 @@ import { CreateArtistDto, UpdateArtistDto } from '../src/artists/dtos';
 
 describe('USersController (e2e)', () => {
   let app: INestApplication;
+  let token: string | undefined;
   const artist = artistsModelMock();
 
   beforeEach(async () => {
@@ -20,12 +21,15 @@ describe('USersController (e2e)', () => {
       .useValue(artistsCrudMock)
       .compile();
 
+    token = await tokenMock();
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
   it('/artists (GET)', async () => {
-    const response = request(app.getHttpServer()).get('/artists');
+    const response = request(app.getHttpServer())
+      .get('/artists')
+      .set({ Authorization: 'Bearer ' + token });
 
     artistsCrudMock.findAll.mockImplementation(() => [artist, artist, artist]);
     expect((await response).statusCode).toEqual(200);
@@ -41,6 +45,7 @@ describe('USersController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .post('/artists')
+      .set({ Authorization: 'Bearer ' + token })
       .send(dto);
 
     artistsCrudMock.create.mockImplementation(() => artist);
@@ -58,6 +63,7 @@ describe('USersController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .put('/artists/' + id)
+      .set({ Authorization: 'Bearer ' + token })
       .send(dto);
 
     artistsCrudMock.update.mockImplementation(() => artist);
@@ -67,7 +73,9 @@ describe('USersController (e2e)', () => {
 
   it('/artists/id (DELETE)', async () => {
     const id = faker.string.uuid();
-    const response = request(app.getHttpServer()).delete('/artists/' + id);
+    const response = request(app.getHttpServer())
+      .delete('/artists/' + id)
+      .set({ Authorization: 'Bearer ' + token });
 
     artistsCrudMock.delete.mockImplementation(() => artist);
     expect((await response).statusCode).toEqual(200);

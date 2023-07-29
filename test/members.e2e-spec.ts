@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { membersCrudMock, membersModelMock } from '../src/_mocks_';
+import { membersCrudMock, membersModelMock, tokenMock } from '../src/_mocks_';
 import { faker } from '@faker-js/faker';
 import { MembersModule } from '../src/members/members.module';
 import { MembersService } from '../src/members/members.service';
@@ -10,6 +10,7 @@ import { CreateMemberDto, UpdateMemberDto } from '../src/members/dtos';
 
 describe('USersController (e2e)', () => {
   let app: INestApplication;
+  let token: string | undefined;
   const member = membersModelMock();
 
   beforeEach(async () => {
@@ -20,12 +21,15 @@ describe('USersController (e2e)', () => {
       .useValue(membersCrudMock)
       .compile();
 
+    token = await tokenMock();
     app = moduleFixture.createNestApplication();
     await app.init();
   });
 
   it('/members (GET)', async () => {
-    const response = request(app.getHttpServer()).get('/members');
+    const response = request(app.getHttpServer())
+      .get('/members')
+      .set({ Authorization: 'Bearer ' + token });
 
     membersCrudMock.findAll.mockImplementation(() => [member, member, member]);
     expect((await response).statusCode).toEqual(200);
@@ -43,6 +47,7 @@ describe('USersController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .post('/members')
+      .set({ Authorization: 'Bearer ' + token })
       .send(dto);
 
     membersCrudMock.create.mockImplementation(() => member);
@@ -62,6 +67,7 @@ describe('USersController (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .put('/members/' + id)
+      .set({ Authorization: 'Bearer ' + token })
       .send(dto);
 
     membersCrudMock.update.mockImplementation(() => member);
@@ -71,7 +77,9 @@ describe('USersController (e2e)', () => {
 
   it('/members/id (DELETE)', async () => {
     const id = faker.string.uuid();
-    const response = request(app.getHttpServer()).delete('/members/' + id);
+    const response = request(app.getHttpServer())
+      .delete('/members/' + id)
+      .set({ Authorization: 'Bearer ' + token });
 
     membersCrudMock.delete.mockImplementation(() => member);
     expect((await response).statusCode).toEqual(200);

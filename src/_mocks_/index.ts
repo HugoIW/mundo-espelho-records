@@ -4,3 +4,4 @@ export * from './auth.mock';
 export * from './members.mock';
 export * from './tracks.mock';
 export * from './users.mock';
+export * from './token.mock';
